@@ -7,11 +7,8 @@ main()=>runApp(const QuizApp());
 
 class _QuizState extends State<QuizApp>{
 
-  int _perguntaSelecionada = 0;
-  final List<String> perguntas = [
-    
-  ];
-  final List<Map<String, Object>> askAndAnswers = [
+  int _selectedQuestion = 0;
+  final List<Map<String, Object>> _askAndAnswers = const [
     {
       'pergunta' : 'Qual é a sua cor favorita?',
       'resposta': ["Azul", "Verde", "Vermelho", "Amarelo"]
@@ -25,13 +22,16 @@ class _QuizState extends State<QuizApp>{
       'resposta': ["Café", "Leite", "Refrigerante", "Água"]
     }
   ];
-  late List<String> answers;
-  late List<Widget> buttonList;
 
+  late List<String> answers;
+
+  bool get hasQuestion {
+    return _selectedQuestion < _askAndAnswers.length;
+  }
 
   void _responder(){
     setState(() {
-      _perguntaSelecionada++;
+      _selectedQuestion++;
     });
   }
 
@@ -40,20 +40,19 @@ class _QuizState extends State<QuizApp>{
   
   @override
   Widget build(BuildContext context){
-    
-    answers = askAndAnswers.elementAt(_perguntaSelecionada)['resposta'] as List<String>;
-    buttonList = answers.map((texto)  =>  Button(texto, _responder)).toList() ;
-
+    if(hasQuestion){
+      answers =  _askAndAnswers.elementAt(_selectedQuestion)['resposta'] as List<String>;
+    }
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Quiz'), backgroundColor: const Color.fromARGB(255, 0, 146, 124),
         ),
-        body:Column(children: [
-            Question(askAndAnswers[_perguntaSelecionada]['pergunta'] as String),
-            ...buttonList
-          ])
+        body: hasQuestion ? Column(children: [
+            Question(_askAndAnswers[_selectedQuestion]['pergunta'] as String),
+            ...answers.map((texto)  =>  Button(texto, _responder)).toList()
+          ]) : null
       ),
 
     );
