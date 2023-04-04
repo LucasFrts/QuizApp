@@ -1,8 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'Question.dart';
-import './Button.dart';
-
+import 'Questionary.dart';
+import 'Result.dart';
 main()=>runApp(const QuizApp());
 
 class _QuizState extends State<QuizApp>{
@@ -47,12 +46,11 @@ class _QuizState extends State<QuizApp>{
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Quiz'), backgroundColor: const Color.fromARGB(255, 0, 146, 124),
+          title: const Text('Quiz', textAlign: TextAlign.center), backgroundColor: const Color.fromARGB(255, 0, 146, 124),
         ),
-        body: hasQuestion ? Column(children: [
-            Question(_askAndAnswers[_selectedQuestion]['pergunta'] as String),
-            ...answers.map((texto)  =>  Button(texto, _responder)).toList()
-          ]) : null
+        body: hasQuestion ? 
+            Questionary(_askAndAnswers[_selectedQuestion]['pergunta'] as String, answers, _responder)
+           : const Result()
       ),
 
     );
