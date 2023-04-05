@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'Questionary.dart';
 import 'Result.dart';
@@ -7,30 +9,52 @@ main()=>runApp(const QuizApp());
 class _QuizState extends State<QuizApp>{
 
   int _selectedQuestion = 0;
-  final List<Map<String, Object>> _askAndAnswers = const [
+  int _quantidadeAcertada = 0;
+  final  _askAndAnswers = const [
     {
       'pergunta' : 'Qual é a sua cor favorita?',
-      'resposta': ["Azul", "Verde", "Vermelho", "Amarelo"]
+      'resposta': [
+        {"texto":"Azul"    , "valor": "1"  } ,
+        {"texto":"Verde"   , "valor": "1"  } ,
+        {"texto":"Vermelho", "valor": "1"  } ,
+        {"texto":"Amarelo" , "valor": "1"  }]
     },
     {
       'pergunta': 'Qual é o seu animal favorito?',
-      'resposta':["Cachorro", "Gato", "Passarinho", "Coelho"],
+      'resposta':[
+        {"texto": "Cachorro",   "valor": "1"},
+        {"texto": "Gato",       "valor": "1"},
+        {"texto": "Passarinho", "valor": "1"},
+        {"texto": "Coelho"    , "valor": "1"}
+        ],
     },
     {
       'pergunta': 'Qual a sua bebida favorita?',
-      'resposta': ["Café", "Leite", "Refrigerante", "Água"]
+      'resposta': [
+        {"texto":"Café"         , "valor": "1"}, 
+        {"texto":"Leite"        , "valor": "1"}, 
+        {"texto":"Refrigerante" , "valor": "1"}, 
+        {"texto":"Água"         , "valor": "1"}
+        ]
     }
   ];
 
-  late List<String> answers;
+  late List<Map<String, String>> answers;
 
   bool get hasQuestion {
     return _selectedQuestion < _askAndAnswers.length;
   }
 
-  void _responder(){
+   dynamic _responder(String result){
+    
     setState(() {
       _selectedQuestion++;
+      if(result == "1"){
+     
+        _quantidadeAcertada++;
+      
+    }
+    print(_quantidadeAcertada);
     });
   }
 
@@ -40,7 +64,7 @@ class _QuizState extends State<QuizApp>{
   @override
   Widget build(BuildContext context){
     if(hasQuestion){
-      answers =  _askAndAnswers.elementAt(_selectedQuestion)['resposta'] as List<String>;
+      answers =  _askAndAnswers.elementAt(_selectedQuestion)['resposta'] as List<Map<String, String>>;
     }
 
     return MaterialApp(
@@ -49,7 +73,11 @@ class _QuizState extends State<QuizApp>{
           title: const Text('Quiz', textAlign: TextAlign.center), backgroundColor: const Color.fromARGB(255, 0, 146, 124),
         ),
         body: hasQuestion ? 
-            Questionary(_askAndAnswers[_selectedQuestion]['pergunta'] as String, answers, _responder)
+            Questionary(
+            _askAndAnswers[_selectedQuestion]['pergunta'] as String, 
+            answers, 
+            _responder
+            )
            : const Result()
       ),
 

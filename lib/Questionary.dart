@@ -3,16 +3,17 @@ import 'Question.dart';
 import './Button.dart';
 
 class Questionary extends StatelessWidget {
-  final List<String> answers;
+  final List<Map<String, String>> answers;
   final String question;
-  final void Function() _responder;
-  const Questionary(this.question, this.answers, this._responder,{super.key});
+  final dynamic Function(String result) _responder;
+  late int value;
+  Questionary(this.question, this.answers, this._responder,{super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       Question(question),
-      ...answers.map((texto)  =>  Button(texto, _responder)).toList()
+      ...answers.map((answer)  =>  Button(answer['texto'].toString(),() => _responder(answer['valor'].toString()) )).toList()
     ],);
   }
 }
